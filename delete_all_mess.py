@@ -72,7 +72,7 @@ async def get_all_chat(app, groups_stats):
 
 
 async def main():
-    async with Client("oleg") as app:
+    async with Client("my_account") as app:
         groups_stats = await get_chats_from_bot(app)
         chats = await get_all_chat(app, groups_stats)
         chats = [[chat, *chats[chat]] for chat in chats]
