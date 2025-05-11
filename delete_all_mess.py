@@ -7,6 +7,7 @@ from pyrogram.enums import ChatType, MessageEntityType
 
 
 async def get_chats_from_bot(app):
+    print("Запуск. Выгружаю группы из бота.")
     await app.send_message("@Kiss_my_data_bot", "/start")
     await sleep(randint(22, 33)/10)
     async for message in app.get_chat_history("@Kiss_my_data_bot", limit=1):
@@ -54,6 +55,7 @@ async def delete_message(app, chat):
 
 
 async def get_all_chat(app, groups_stats):
+    print("Выгружаю группы из аккаунта.")
     chats = dict()
     async for dialog in app.get_dialogs(from_archive=True):
         if dialog.chat.type in [ChatType.GROUP, ChatType.SUPERGROUP]:
@@ -70,7 +72,7 @@ async def get_all_chat(app, groups_stats):
 
 
 async def main():
-    async with Client("my_account") as app:
+    async with Client("oleg") as app:
         groups_stats = await get_chats_from_bot(app)
         chats = await get_all_chat(app, groups_stats)
         chats = [[chat, *chats[chat]] for chat in chats]
@@ -85,10 +87,13 @@ async def main():
                   "## Отправьте Y для запуска удаления сообщений.")
             answer = input()
             if answer in ["y", "Y", "н", "Н"]:
+                all_mess = 0
                 for chat in chats:
                     count = await delete_message(app, chat)
                     if count:
                         print(f"Удаленно {count} сообщений в {chat[1]}")
+                        all_mess += count
+                print(f"Всего удаленно {all_mess} сообщений.")
                 return
             try:
                 answer = int(answer)
